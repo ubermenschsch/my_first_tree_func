@@ -25,7 +25,7 @@ typedef struct Node_list {
 Node* print_last_left_fork(Node* tree); 
 void sub_tree_print(Node* tree);
 void tree_print(Node* tree);
-void tree_print_recurant(Node* tree, Node_list* list_tree);
+void tree_print_recurant(Node* tree, Node_list* list_tree, Node_list* list_spec);
 
 
 void list_init(Node_list * list);
@@ -226,23 +226,25 @@ void tree_print(Node* tree)
     Node_list list_tree_prototype;
     Node_list* list_tree = &list_tree_prototype;
     list_init(list_tree);
-    list_push_front(list_tree, tree->data);
-    tree_print_recurant(tree, list_tree);
+    Node_list* list_spec = list_push_back(list_tree, tree->data);
+    tree_print_recurant(tree, list_tree, list_spec);
     list_print(list_tree);
     list_clear(list_tree);
 }
 
-void tree_print_recurant(Node* tree, Node_list* list_tree)
+void tree_print_recurant(Node* tree, Node_list* list_tree, Node_list* list_spec)
 {
     if(tree->left != NULL)
     {
-        list_push_front(list_tree, (tree->left)->data);
-        tree_print_recurant(tree->left, list_tree);
+        Node_list* p = list_push_front(list_spec, (tree->left)->data);
+        list_print(list_tree);
+        tree_print_recurant(tree->left, list_tree, p);
     }
     if(tree->right != NULL)
     {
-        list_push_back(list_tree, (tree->right)->data);
-        tree_print_recurant(tree->right, list_tree);
+        Node_list* q = list_push_back(list_spec, (tree->right)->data);
+        list_print(list_tree);
+        tree_print_recurant(tree->right, list_tree, q);
     }
 }
 
