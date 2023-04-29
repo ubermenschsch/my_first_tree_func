@@ -3,12 +3,18 @@
 
 typedef int Data;
 
-typedef struct Node Node;
-struct Node {
+// typedef struct Node Node;
+typedef struct Node {
     Data data;      // данные в узле
-    Node * left;    // указатель на левого ребенка
-    Node * right;   // указатель на правого ребенка
-};
+    struct Node* left;    // указатель на левого ребенка
+    struct Node* right;   // указатель на правого ребенка
+} Node;
+
+typedef struct Node_list {
+    Data data;      // данные в узле
+    struct Node_list * prev;    // указатель на предыдущий узел
+    struct Node_list * next;    // указатель на следующий узел
+} Node_list;
 
 
 //void tree_print(Node * tree);
@@ -18,11 +24,23 @@ struct Node {
 
 Node* print_last_left_fork(Node* tree); 
 void sub_tree_print(Node* tree);
+void tree_print(Node* tree);
+void tree_print_recurant(Node* tree, Node_list* list_tree);
+
+
+void list_init(Node_list * list);
+Node_list * list_push_front(Node_list * list, Data d);
+Node_list * list_push_back(Node_list * list, Data d);
+void list_print (Node_list * list);
+void list_clear(Node_list * list);
+
 
 
 int main()
 {
-    Node* tree = NULL; // сначала дерево пустое 
+    printf("HUI\n");
+    Node ptree  = {0, NULL, NULL};
+    Node* tree = &ptree; // сначала дерево пустое 
     Node one   = {1, NULL, NULL}; 
     Node two   = {2, NULL, NULL};
     Node three = {3, NULL, NULL};
@@ -35,15 +53,17 @@ int main()
 
     tree            = &nine;
     tree->left      = &three;
-    (&three)->right = &seven;
+    (&three)->right = &eight;
     (&three)->left  = &two;
     (&two)->left    = &one;
-    (&seven)->right = &eight;
-    (&seven)->left  = &five;
-    (&five)->right  = &six;
+    (&eight)->left  = &five;
+    (&five)->right  = &seven;
+    (&seven)->left  = &six;
     (&five)->left   = &four;
 
-    sub_tree_print(tree);
+    tree_print(tree);
+
+    
 
 }
 
@@ -116,7 +136,7 @@ void sub_tree_print(Node* sub_tree_head)
     }
     sub_sub_tree
 }*/
-
+/*
 Node* print_last_left_fork(Node* tree)                   //search last left fork, print this and return the head of subtree(latest branching)
 {
     Node* tree_search   = tree;
@@ -174,13 +194,114 @@ void sub_tree_print(Node* tree)                         //print only one subtree
             tree_search = tree_search->right;
         }
     }
-        printf("%d ", tree_search->data);
+    printf("%d ", tree_search->data);
+}
+
+*/
+
+/*void tree_print(Node* tree)
+{
+    Node* tree_search = tree;
+    while(tree_search->left != NULL)
+    {
+        tree_print(tree_search->left);
+    }
+    printf("%d ", tree_search->data);
+
+
+
+    if(tree_search->left != NULL)
+    {
+        ptintf("%d ", (tree_search->left)->data);
+    }
+    printf("%d ", tree_search->data);
+    if(tree_search->right != NULL)
+    {
+        ptintf("%d ", (tree_search->right)->data);
+    }
+}*/
+
+void tree_print(Node* tree)
+{
+    Node_list list_tree_prototype;
+    Node_list* list_tree = &list_tree_prototype;
+    list_init(list_tree);
+    list_push_front(list_tree, tree->data);
+    tree_print_recurant(tree, list_tree);
+    list_print(list_tree);
+    list_clear(list_tree);
+}
+
+void tree_print_recurant(Node* tree, Node_list* list_tree)
+{
+    if(tree->left != NULL)
+    {
+        list_push_front(list_tree, (tree->left)->data);
+        tree_print_recurant(tree->left, list_tree);
+    }
+    if(tree->right != NULL)
+    {
+        list_push_back(list_tree, (tree->right)->data);
+        tree_print_recurant(tree->right, list_tree);
+    }
 }
 
 
+void list_init(Node_list * list)
+{
+    list->next = list;
+    list->prev = list;
+}
 
+Node_list * list_push_back(Node_list * list, Data d)
+{
+    Node_list* new_node = malloc(sizeof(Node_list));
+    Node_list* blist = list->prev;
+    new_node->prev = blist;
+    new_node->next = list;
+    new_node->data = d;
+    blist->next = new_node;
+    list->prev = new_node;
+    return new_node;
+}
 
+Node_list * list_push_front(Node_list * list, Data d)
+{
+    Node_list* new_node = malloc(sizeof(Node_list));
+    Node_list* nlist = list->next;
+    new_node->prev = list;
+    new_node->next = nlist;
+    new_node->data = d;
+    nlist->prev = new_node;
+    list->next = new_node;
+    return new_node;
+}
 
+void list_clear(Node_list * list)
+{
+    Node_list* spec_list = list->next;
+    Node_list* while_list = list->next;
+    while (while_list != list)
+    {
+        while_list = while_list->next;
+        free(spec_list);
+        spec_list = while_list;
+    }
+}
+
+void list_print (Node_list* list)
+{
+   if (list != NULL)
+    {
+        Node_list* nlist = list->next;
+        while (nlist != list)
+        {
+            printf("%d ", nlist->data);
+            nlist = nlist->next;
+        }
+    }
+    printf("\n");
+}
 
 
 
