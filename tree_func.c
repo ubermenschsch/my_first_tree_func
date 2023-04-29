@@ -11,10 +11,12 @@ struct Node {
 };
 
 
-void tree_print(Node * tree);
+//void tree_print(Node * tree);
 
 
-void tree_left(Node* tree, size_t* num_left);
+//void tree_left(Node* tree, size_t* num_left);
+
+Node* print_last_left_fork(Node* tree); 
 
 
 int main()
@@ -29,15 +31,38 @@ int main()
     Node seven = {7, NULL, NULL};
     Node eight = {8, NULL, NULL};
     Node nine  = {9, NULL, NULL};
+
+    tree            = &five;
+    tree->left      = &three;
+    (&three)->right = &four;
+    (&three)->left  = &two;
+    (&two)->left    = &one;
+
+    Node* pthree = print_last_left_fork(tree);
+
+
+    if (pthree == &three)
+    {
+        printf("\n1\n");
+    }
+    else
+    {
+        printf("\n0\n");
+    }
+
+
 }
 
-
+/*
 void tree_print(Node * tree) 
 {
     size_t num_left  = 0;
     size_t num_right = 0;
      
-    Node* sub_tree_head = tree_left(tree, &num_left);             //search tree with minimum number and return the head of subtree(latest branching)
+    Node* sub_tree_head = tree_left(tree, &num_left);            //search Node with minimum number and return the head of subtree(latest branching)
+
+    int numbers[10];
+    while 
 
     tree_print = tree;
     while (tree_print->right == NULL)
@@ -52,7 +77,7 @@ void tree_print(Node * tree)
 
 }
 
-Node* tree_left(Node* tree, size_t* num_left)
+Node* tree_left(Node* tree, size_t* num_left)                   //search Node with minimum number and return the head of subtree(latest branching)
 {
     Node* tree_search   = tree;
     Node* sub_tree_head = tree;
@@ -82,3 +107,94 @@ Node* tree_right(Node* tree, size_t* num_right)
 
     return tree_search;
 }
+
+void sub_tree_print(Node* sub_tree_head)
+{
+    Node* sub_sub_tree_head = tree_left(tree, &num_left);
+    sub_tree_print(sub_sub_tree_head);
+
+    Node* sub_tree_counter = sub_tree_head;
+    size_t counter = 0;
+    while (sub_tree_counter->left != )
+    {
+        sub_tree_counter = sub_tree_counter->left;
+        counter++;
+    }
+    sub_sub_tree
+}*/
+
+Node* print_last_left_fork(Node* tree)                   //search last left fork, print this and return the head of subtree(latest branching)
+{
+    Node* tree_search   = tree;
+    Node* sub_tree_head = tree;
+
+    size_t counter = 0;
+
+
+
+    while(tree_search->left != NULL)
+    {
+        if (tree_search->right != NULL)
+        {
+            sub_tree_head = tree_search;
+            counter = 0;
+        }
+        tree_search = tree_search->left;
+        counter++;
+    }
+
+    Data* numbers = calloc(counter + 1, sizeof(Data));
+
+    tree_search = sub_tree_head;
+    for(size_t i = 0; tree_search->left != NULL; i++)
+    {
+        tree_search = tree_search->left;
+        *(numbers + i) = tree_search->data;
+    }
+
+    for (int i = counter - 1; i >= 0; i--)
+    {
+        printf("%d ", *(numbers + i));
+    }
+
+
+
+    free(numbers);
+
+    return sub_tree_head;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
