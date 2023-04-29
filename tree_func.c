@@ -33,11 +33,15 @@ int main()
     Node eight = {8, NULL, NULL};
     Node nine  = {9, NULL, NULL};
 
-    tree            = &five;
+    tree            = &nine;
     tree->left      = &three;
-    (&three)->right = &four;
+    (&three)->right = &seven;
     (&three)->left  = &two;
     (&two)->left    = &one;
+    (&seven)->right = &eight;
+    (&seven)->left  = &five;
+    (&five)->right  = &six;
+    (&five)->left   = &four;
 
     sub_tree_print(tree);
 
@@ -154,7 +158,7 @@ Node* print_last_left_fork(Node* tree)                   //search last left fork
     return sub_tree_head;
 }
 
-void sub_tree_print(Node* tree)
+void sub_tree_print(Node* tree)                         //print only one subtree with min value
 {
     Node* tree_search = tree;
     while(tree_search->left != NULL || tree_search->right != NULL)
@@ -162,15 +166,15 @@ void sub_tree_print(Node* tree)
         tree_search = print_last_left_fork(tree_search);
 
         printf("%d ", tree_search->data);
-        
+
         tree_search = tree_search->right;
         while(tree_search->left == NULL && tree_search->right != NULL)
         {
             printf("%d ", tree_search->data);
             tree_search = tree_search->right;
         }
-        printf("%d ", tree_search->data);
     }
+        printf("%d ", tree_search->data);
 }
 
 
