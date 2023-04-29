@@ -17,6 +17,7 @@ struct Node {
 //void tree_left(Node* tree, size_t* num_left);
 
 Node* print_last_left_fork(Node* tree); 
+void sub_tree_print(Node* tree);
 
 
 int main()
@@ -38,18 +39,7 @@ int main()
     (&three)->left  = &two;
     (&two)->left    = &one;
 
-    Node* pthree = print_last_left_fork(tree);
-
-
-    if (pthree == &three)
-    {
-        printf("\n1\n");
-    }
-    else
-    {
-        printf("\n0\n");
-    }
-
+    sub_tree_print(tree);
 
 }
 
@@ -134,16 +124,16 @@ Node* print_last_left_fork(Node* tree)                   //search last left fork
 
     while(tree_search->left != NULL)
     {
+        tree_search = tree_search->left;
+        counter++;
         if (tree_search->right != NULL)
         {
             sub_tree_head = tree_search;
             counter = 0;
         }
-        tree_search = tree_search->left;
-        counter++;
     }
 
-    Data* numbers = calloc(counter + 1, sizeof(Data));
+    Data* numbers = calloc(counter, sizeof(Data));
 
     tree_search = sub_tree_head;
     for(size_t i = 0; tree_search->left != NULL; i++)
@@ -162,6 +152,25 @@ Node* print_last_left_fork(Node* tree)                   //search last left fork
     free(numbers);
 
     return sub_tree_head;
+}
+
+void sub_tree_print(Node* tree)
+{
+    Node* tree_search = tree;
+    while(tree_search->left != NULL || tree_search->right != NULL)
+    {
+        tree_search = print_last_left_fork(tree_search);
+
+        printf("%d ", tree_search->data);
+        
+        tree_search = tree_search->right;
+        while(tree_search->left == NULL && tree_search->right != NULL)
+        {
+            printf("%d ", tree_search->data);
+            tree_search = tree_search->right;
+        }
+        printf("%d ", tree_search->data);
+    }
 }
 
 
