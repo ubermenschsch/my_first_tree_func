@@ -23,6 +23,8 @@ void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_
 
 Node* tree_add(Node* tree, Data d);
 
+void tree_destroy(struct Node * tree);
+
 
 void list_init(Node_list * list);
 void list_print (Node_list * list);
@@ -70,7 +72,21 @@ int main()
     tree = tree_add(tree, 2);
     tree = tree_add(tree, 5);
     tree_print(tree);                // 7
+    tree_destroy(tree);
     return 0;
+}
+
+void tree_destroy(struct Node * tree)
+{
+    if(tree->left != NULL)
+    {
+        tree_destroy(tree->left);
+    }
+    if(tree->right != NULL)
+    {
+        tree_destroy(tree->right);
+    }
+    free(tree);
 }
 
 Node* tree_add(Node* tree, Data d) 
@@ -111,8 +127,6 @@ Node* tree_add(Node* tree, Data d)
     }
     return tree;
 }
-
-void tree_add_recurant();
 
 void tree_print(Node* tree)
 {
