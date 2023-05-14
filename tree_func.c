@@ -21,6 +21,8 @@ void tree_print(Node* tree);
 void tree_count_recurant(Node* tree, size_t* counter);
 void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_new_node);
 
+Node* tree_add(Node* tree, Data d);
+
 
 void list_init(Node_list * list);
 void list_print (Node_list * list);
@@ -29,35 +31,88 @@ void list_insert_back(Node_list * list, Node_list * t);
 
 
 
-int main()
-{
-    Node ptree  = {0, NULL, NULL};
-    Node* tree = &ptree; // сначала дерево пустое 
-    Node one   = {1, NULL, NULL}; 
-    Node two   = {2, NULL, NULL};
-    Node three = {3, NULL, NULL};
-    Node four  = {4, NULL, NULL};
-    Node five  = {5, NULL, NULL};
-    Node six   = {6, NULL, NULL};
-    Node seven = {7, NULL, NULL};
-    Node eight = {8, NULL, NULL};
-    Node nine  = {9, NULL, NULL};
+// int main()
+// {
+//     Node ptree  = {0, NULL, NULL};
+//     Node* tree = &ptree; // сначала дерево пустое 
+//     Node one   = {1, NULL, NULL}; 
+//     Node two   = {2, NULL, NULL};
+//     Node three = {3, NULL, NULL};
+//     Node four  = {4, NULL, NULL};
+//     Node five  = {5, NULL, NULL};
+//     Node six   = {6, NULL, NULL};
+//     Node seven = {7, NULL, NULL};
+//     Node eight = {8, NULL, NULL};
+//     Node nine  = {9, NULL, NULL};
 
-    tree            = &seven;
-    (&seven)->right = &eight;
-    (&eight)->right = &nine;
-    (&seven)->left  = &two;
-    (&two)->left    = &one;
-    (&two)->right   = &six;
-    (&six)->left    = &four;
-    (&four)->left   = &three;
-    (&four)->right  = &five;
+//     tree            = &seven;
+//     (&seven)->right = &eight;
+//     (&eight)->right = &nine;
+//     (&seven)->left  = &two;
+//     (&two)->left    = &one;
+//     (&two)->right   = &six;
+//     (&six)->left    = &four;
+//     (&four)->left   = &three;
+//     (&four)->right  = &five;
 
-    tree_print(tree);
+//     tree_print(tree);
 
     
 
+// }
+
+int main()
+{
+    Node * tree = NULL;         // указатель на корень
+    tree = tree_add(tree, 7);   // указатель на корень изменился
+    tree = tree_add(tree, 9);
+    tree = tree_add(tree, 0);
+    tree = tree_add(tree, 2);
+    tree = tree_add(tree, 5);
+    tree_print(tree);                // 7
+    return 0;
 }
+
+Node* tree_add(Node* tree, Data d) 
+{
+    if (tree == NULL)
+    {
+        tree = (Node*) calloc(1, sizeof(Node));
+        tree->data = d;
+    }
+    else
+    {
+        if (d < tree->data)
+        {
+            if (tree->left != NULL)
+            {
+                tree_add(tree->left, d);
+            }
+            else
+            {
+                Node* new_node = (Node*) calloc(1, sizeof(Node));
+                new_node->data = d;
+                tree->left = new_node;
+            }
+        }
+        if (d > tree->data)
+        {
+            if (tree->right != NULL)
+            {
+                tree_add(tree->right, d);
+            }
+            else
+            {
+                Node* new_node = (Node*) calloc(1, sizeof(Node));
+                new_node->data = d;
+                tree->right = new_node;
+            }
+        }
+    }
+    return tree;
+}
+
+void tree_add_recurant();
 
 void tree_print(Node* tree)
 {
