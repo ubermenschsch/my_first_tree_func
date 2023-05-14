@@ -3,7 +3,6 @@
 
 typedef int Data;
 
-// typedef struct Node Node;
 typedef struct Node {
     Data data;      // данные в узле
     struct Node* left;    // указатель на левого ребенка
@@ -18,19 +17,13 @@ typedef struct Node_list {
 
 
 
-// Node* print_last_left_fork(Node* tree); 
-// void sub_tree_print(Node* tree);
 void tree_print(Node* tree);
-// void tree_print_recurant(Node* tree, Node_list* list_tree, Node_list* list_spec);
 void tree_count_recurant(Node* tree, size_t* counter);
 void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_new_node);
 
 
 void list_init(Node_list * list);
-// Node_list * list_push_front(Node_list * list, Data d);
-// Node_list * list_push_back(Node_list * list, Data d);
 void list_print (Node_list * list);
-void list_clear(Node_list * list);
 void list_insert_front(Node_list * list, Node_list * t);
 void list_insert_back(Node_list * list, Node_list * t);
 
@@ -72,7 +65,6 @@ void tree_print(Node* tree)
     size_t counter = 1;                                                            //because tree_count_recurant didn't count head of tree
     tree_count_recurant(tree, &counter);
    
-    printf("%ld\n", counter);
     Node_list* list_tree = (Node_list*) calloc((counter + 1), sizeof(Node_list));
     list_init(list_tree);
 
@@ -80,32 +72,13 @@ void tree_print(Node* tree)
     list_new_node->data = tree->data;
     list_insert_front(list_tree, list_new_node);
     list_new_node = list_new_node + 1;
-    // for (size_t i = 0; i < (counter - 1); i++)
-    // {
-    //     list_new_node->data = (int) i;
-    //     list_insert_front(list_tree, list_new_node);
-    //     list_new_node = list_new_node + 1;
-    // }
+
     tree_make_list_recurant(tree, (list_new_node - 1), &list_new_node);
+
     list_print(list_tree);
     free(list_tree);
 }
 
-// void tree_print_recurant(Node* tree, Node_list* list_tree, Node_list* list_spec)
-// {
-//     if(tree->left != NULL)
-//     {
-//         list_tree = list_push_back(list_spec, (tree->left)->data);
-//         //list_print(list_tree);
-//         tree_print_recurant(tree->left, list_tree, list_tree);
-//     }
-//     if(tree->right != NULL)
-//     {
-//         list_tree = list_push_front(list_spec, (tree->right)->data);
-//         //list_print(list_tree);
-//         tree_print_recurant(tree->right, list_tree, list_tree);
-//     }
-// }
 
 void tree_count_recurant(Node* tree, size_t* counter)
 {
@@ -127,8 +100,6 @@ void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_
     {
         (*list_new_node)->data = (tree->left)->data;
         list_insert_front(list_tree, *list_new_node);
-        // list_print(list_tree);
-        // list_tree = list_new_node;
         *list_new_node = (*list_new_node) + 1;
         tree_make_list_recurant(tree->left, (*list_new_node) - 1, list_new_node);
     }
@@ -136,12 +107,13 @@ void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_
     {
         (*list_new_node)->data = (tree->right)->data;
         list_insert_back(list_tree, *list_new_node);
-        // list_print(list_tree);
-        // list_tree = list_new_node;
         *list_new_node = (*list_new_node) + 1;
         tree_make_list_recurant(tree->right, (*list_new_node) - 1, list_new_node);
     }
 }
+
+
+
 
 
 void list_init(Node_list * list)
@@ -149,42 +121,6 @@ void list_init(Node_list * list)
     list->next = list;
     list->prev = list;
 }
-
-// Node_list * list_push_back(Node_list * list, Data d)
-// {
-//     Node_list* new_node = malloc(sizeof(Node_list));
-//     Node_list* blist = list->prev;
-//     new_node->prev = blist;
-//     new_node->next = list;
-//     new_node->data = d;
-//     blist->next = new_node;
-//     list->prev = new_node;
-//     return new_node;
-// }
-
-// Node_list * list_push_front(Node_list * list, Data d)
-// {
-//     Node_list* new_node = malloc(sizeof(Node_list));
-//     Node_list* nlist = list->next;
-//     new_node->prev = list;
-//     new_node->next = nlist;
-//     new_node->data = d;
-//     nlist->prev = new_node;
-//     list->next = new_node;
-//     return new_node;
-// }
-
-// void list_clear(Node_list * list)
-// {
-//     Node_list* spec_list = list->next;
-//     Node_list* while_list = list->next;
-//     while (while_list != list)
-//     {
-//         while_list = while_list->next;
-//         free(spec_list);
-//         spec_list = while_list;
-//     }
-// }
 
 void list_print (Node_list* list)
 {
