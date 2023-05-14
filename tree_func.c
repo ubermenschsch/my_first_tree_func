@@ -23,7 +23,7 @@ typedef struct Node_list {
 void tree_print(Node* tree);
 // void tree_print_recurant(Node* tree, Node_list* list_tree, Node_list* list_spec);
 void tree_count_recurant(Node* tree, size_t* counter);
-void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list* list_new_node);
+void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_new_node);
 
 
 void list_init(Node_list * list);
@@ -71,16 +71,23 @@ void tree_print(Node* tree)
 
     size_t counter = 1;                                                            //because tree_count_recurant didn't count head of tree
     tree_count_recurant(tree, &counter);
-
+   
     printf("%ld\n", counter);
     Node_list* list_tree = (Node_list*) calloc((counter + 1), sizeof(Node_list));
     list_init(list_tree);
 
-    list_tree->data = tree->data;
-    printf("%d\n", tree->data);
-    Node_list* list_new_node = list_tree + 1 * sizeof(Node_list);
-    tree_make_list_recurant(tree, list_tree, list_new_node);
-    //list_print(list_tree);
+    Node_list* list_new_node = list_tree + 1;
+    list_new_node->data = tree->data;
+    list_insert_front(list_tree, list_new_node);
+    list_new_node = list_new_node + 1;
+    // for (size_t i = 0; i < (counter - 1); i++)
+    // {
+    //     list_new_node->data = (int) i;
+    //     list_insert_front(list_tree, list_new_node);
+    //     list_new_node = list_new_node + 1;
+    // }
+    tree_make_list_recurant(tree, (list_new_node - 1), &list_new_node);
+    list_print(list_tree);
     free(list_tree);
 }
 
@@ -114,25 +121,25 @@ void tree_count_recurant(Node* tree, size_t* counter)
     }
 }
 
-void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list* list_new_node)
+void tree_make_list_recurant(Node* tree, Node_list* list_tree, Node_list** list_new_node)
 {
     if(tree->left != NULL)
     {
-        list_new_node->data = (tree->left)->data;
-        list_insert_back(list_tree, list_new_node);
-        list_print(list_tree);
-        list_tree = list_new_node;
-        list_new_node = list_new_node + 1 * sizeof(Node_list);
-        tree_make_list_recurant(tree->left, list_tree, list_new_node);
+        (*list_new_node)->data = (tree->left)->data;
+        list_insert_front(list_tree, *list_new_node);
+        // list_print(list_tree);
+        // list_tree = list_new_node;
+        *list_new_node = (*list_new_node) + 1;
+        tree_make_list_recurant(tree->left, (*list_new_node) - 1, list_new_node);
     }
     if(tree->right != NULL)
     {
-        list_new_node->data = (tree->right)->data;
-        list_insert_front(list_tree, list_new_node);
-        list_print(list_tree);
-        list_tree = list_new_node;
-        list_new_node = list_new_node + 1 * sizeof(Node_list);
-        tree_make_list_recurant(tree->right, list_tree, list_new_node);
+        (*list_new_node)->data = (tree->right)->data;
+        list_insert_back(list_tree, *list_new_node);
+        // list_print(list_tree);
+        // list_tree = list_new_node;
+        *list_new_node = (*list_new_node) + 1;
+        tree_make_list_recurant(tree->right, (*list_new_node) - 1, list_new_node);
     }
 }
 
