@@ -25,6 +25,10 @@ Node* tree_add(Node* tree, Data d);
 
 void tree_destroy(struct Node * tree);
 
+int tree_height(Node* tree);
+
+int tree_is_balanced(Node* tree);
+
 
 void list_init(Node_list * list);
 void list_print (Node_list * list);
@@ -63,17 +67,113 @@ void list_insert_back(Node_list * list, Node_list * t);
 
 // }
 
+// int main()
+// {
+//     Node * tree = NULL;         // указатель на корень
+//     tree = tree_add(tree, 7);   // указатель на корень изменился
+//     tree = tree_add(tree, 9);
+//     tree = tree_add(tree, 0);
+//     tree = tree_add(tree, 2);
+//     tree = tree_add(tree, 5);
+//     tree_print(tree);                // 7
+//     tree_destroy(tree);
+//     return 0;
+// }
+
 int main()
 {
-    Node * tree = NULL;         // указатель на корень
-    tree = tree_add(tree, 7);   // указатель на корень изменился
-    tree = tree_add(tree, 9);
-    tree = tree_add(tree, 0);
-    tree = tree_add(tree, 2);
-    tree = tree_add(tree, 5);
-    tree_print(tree);                // 7
-    tree_destroy(tree);
-    return 0;
+    Node* tree = NULL;
+    
+    int number = 0;
+    scanf("%d", &number);
+    while (number != 0)
+    {
+        tree = tree_add(tree, number);
+        scanf("%d", &number);
+        tree_print(tree);
+    }
+    if (tree != NULL)
+    {
+        tree_print(tree);
+        tree_destroy(tree);
+    }
+}
+
+int tree_is_balanced(Node* tree)
+{
+    int left_height = 1;
+    int right_height = 1;
+
+    if (tree->left != NULL)
+    {
+        left_height = tree_height(tree->left); 
+        left_height++;
+    }
+     if (tree->right != NULL)
+    {
+        right_height = tree_height(tree->right); 
+        right_height++;
+    }
+
+    if (((left_height - right_height) > 1) || ((right_height - left_height) > 1))
+    {
+        return 0;
+    }
+
+
+    int is_balanced_left  = 1;
+    int is_balanced_right = 1;
+
+    if (tree->left != NULL)
+    {
+        is_balanced_left = tree_is_balanced(tree->left);
+    }
+    if (tree->right != NULL)
+    {
+        is_balanced_right = tree_is_balanced(tree->right);
+    }
+
+    if (is_balanced_left > is_balanced_right)
+    {
+        return is_balanced_left;
+    }
+    else
+    {
+        return is_balanced_right;
+    }
+}
+
+int tree_height(Node* tree)
+{
+    int height = 1;
+    int left_height = 1;
+    int right_height = 1;
+
+    if (tree->left != NULL)
+    {
+        left_height = tree_height(tree->left); 
+        left_height++;
+    }
+     if (tree->right != NULL)
+    {
+        right_height = tree_height(tree->right); 
+        right_height++;
+    }
+
+    if (tree == NULL)
+    {
+        height = 0;
+    }
+    else if (left_height > right_height)
+    {
+        height = left_height;
+    }
+    else if (right_height >= left_height)
+    {
+        height = right_height;
+    }
+
+    return height;
 }
 
 void tree_destroy(struct Node * tree)
