@@ -29,6 +29,9 @@ int tree_height(Node* tree);
 
 int tree_is_balanced(Node* tree);
 
+void tree_print_nodes_on_height(Node* tree, int height);
+void tree_make_list_nodes_on_height_recurant(Node* tree, Node_list** list_new_node, int height, int required_height);
+
 
 void list_init(Node_list * list);
 void list_print (Node_list * list);
@@ -99,6 +102,61 @@ int main()
     }
 }
 
+
+
+
+
+
+
+void tree_print_nodes_on_height(Node* tree, int required_height)
+{
+    size_t counter = 1;                                                            //because tree_count_recurant didn't count head of tree
+    tree_count_recurant(tree, &counter);
+   
+    Node_list* list_tree = (Node_list*) calloc((counter + 1), sizeof(Node_list));
+    list_init(list_tree);
+
+    Node_list* list_new_node = list_tree + 1;
+    list_new_node->data = tree->data;
+    if (required_height == 0)
+    {
+        list_insert_front(list_tree, list_new_node);
+        list_new_node = list_new_node + 1;
+    }
+    int height = 0;
+    tree_make_list_nodes_on_height_recurant(tree, &list_new_node, height, required_height);
+
+    list_print(list_tree);
+    free(list_tree);
+}
+
+void tree_make_list_nodes_on_height_recurant(Node* tree, Node_list** list_new_node, int height, int required_height)
+{
+    if(tree->left != NULL)
+    {
+        int left_height = height + 1;
+        (*list_new_node)->data = (tree->left)->data;
+        if (left_height == required_height)
+        {
+            list_insert_front((*list_new_node) - 1, *list_new_node);
+            *list_new_node = (*list_new_node) + 1;
+        }
+        tree_make_list_nodes_on_height_recurant(tree->left, list_new_node, left_height, required_height);
+    }
+    if(tree->right != NULL)
+    {
+        int right_height = height + 1;
+        (*list_new_node)->data = (tree->right)->data;
+        if (right_height == required_height)
+        {
+            list_insert_front((*list_new_node) - 1, *list_new_node);
+            *list_new_node = (*list_new_node) + 1;
+        }
+        tree_make_list_nodes_on_height_recurant(tree->right, list_new_node, right_height, required_height);
+    }
+}
+
+
 int tree_is_balanced(Node* tree)
 {
     int left_height = 1;
@@ -143,6 +201,7 @@ int tree_is_balanced(Node* tree)
     }
 }
 
+
 int tree_height(Node* tree)
 {
     int height = 1;
@@ -176,6 +235,7 @@ int tree_height(Node* tree)
     return height;
 }
 
+
 void tree_destroy(struct Node * tree)
 {
     if(tree->left != NULL)
@@ -188,6 +248,7 @@ void tree_destroy(struct Node * tree)
     }
     free(tree);
 }
+
 
 Node* tree_add(Node* tree, Data d) 
 {
@@ -228,6 +289,7 @@ Node* tree_add(Node* tree, Data d)
     return tree;
 }
 
+
 void tree_print(Node* tree)
 {
 
@@ -247,7 +309,6 @@ void tree_print(Node* tree)
     list_print(list_tree);
     free(list_tree);
 }
-
 
 void tree_count_recurant(Node* tree, size_t* counter)
 {
